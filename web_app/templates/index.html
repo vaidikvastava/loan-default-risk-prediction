@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CreditIQ | Loan Default Prediction & Underwriting Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text-main); line-height: 1.5; padding: 24px; }
+        .container { max-width: 1280px; margin: 0 auto; }
+        
+        /* Header */
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo-badge { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; padding: 8px 14px; border-radius: 10px; font-weight: 700; font-size: 1.2rem; }
+        .title h1 { font-size: 1.4rem; font-weight: 700; color: var(--text-main); }
+        .title p { font-size: 0.85rem; color: var(--text-muted); }
+        .status-pill { background: #dcfce7; color: #15803d; padding: 4px 12px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+
+        /* KPI Banner */
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .kpi-card { background: var(--card-bg); padding: 18px; border-radius: 12px; border: 1px solid var(--border); }
+        .kpi-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; }
+        .kpi-value { font-size: 1.6rem; font-weight: 700; color: var(--text-main); }
+        .kpi-sub { font-size: 0.75rem; color: var(--success); font-weight: 500; margin-top: 4px; }
+
+        /* Main Workspace Grid */
+        .workspace { display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px; margin-bottom: 24px; }
+        @media (max-width: 900px) { .workspace { grid-template-columns: 1fr; } }
+        
+        .card { background: var(--card-bg); padding: 22px; border-radius: 12px; border: 1px solid var(--border); }
+        .card-header { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* Forms */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group.full { grid-column: span 2; }
+        label { font-size: 0.8rem; font-weight: 600; color: #334155; }
+        input, select { padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; background: #fff; }
+        input:focus, select:focus { outline: none; border-color: var(--primary); ring: 2px solid #bfdbfe; }
+        
+        button.btn-primary { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        button.btn-primary:hover { background: var(--primary-dark); }
+
+        /* Result Panel */
+        .result-panel { display: flex; flex-direction: column; gap: 16px; }
+        .decision-hero { padding: 20px; border-radius: 12px; text-align: center; border: 1px solid var(--border); background: #f8fafc; }
+        .prob-number { font-size: 2.8rem; font-weight: 800; line-height: 1; margin: 8px 0; }
+        .decision-badge { display: inline-block; padding: 6px 18px; border-radius: 999px; font-weight: 700; font-size: 0.95rem; text-transform: uppercase; margin-top: 8px; }
+        
+        /* Badges */
+        .badge-approve { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .badge-review { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+        .badge-decline { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+        /* Ratios Bar */
+        .ratios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 8px; }
+        .ratio-item { background: #f1f5f9; padding: 10px; border-radius: 8px; text-align: center; }
+        .ratio-title { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+        .ratio-num { font-size: 1.1rem; font-weight: 700; }
+
+        /* Explanation list */
+        .driver-list { display: flex; flex-direction: column; gap: 8px; }
+        .driver-card { padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; border-left: 4px solid var(--primary); background: #f8fafc; }
+        .driver-card.high-risk { border-left-color: var(--danger); background: #fff1f2; }
+        .driver-card.low-risk { border-left-color: var(--success); background: #f0fdf4; }
+
+        /* Visual figures */
+        .figures-section { margin-top: 24px; }
+        .figures-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 12px; }
+        .fig-card { background: white; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; padding: 12px; }
+        .fig-card img { width: 100%; height: auto; border-radius: 6px; }
+        .fig-title { font-size: 0.85rem; font-weight: 600; margin-top: 6px; text-align: center; }
+
+        /* Table */
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 12px; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: #f8fafc; font-weight: 600; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo-area">
+                <div class="logo-badge">CIQ</div>
+                <div class="title">
+                    <h1>CreditIQ Underwriting Intelligence System</h1>
+                    <p>Machine Learning Credit Scoring & Regulatory Audit Portal</p>
+                </div>
+            </div>
+            <div>
+                <span class="status-pill">Active Engine: Random Forest Tuned (ROC-AUC 0.766)</span>
+            </div>
+        </header>
+
+        <!-- KPI Summary Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Test ROC-AUC Score</div>
+                <div class="kpi-value" id="kpi-auc">0.7659</div>
+                <div class="kpi-sub">High Tabular Discriminatory Power</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Cost-Optimal Cutoff</div>
+                <div class="kpi-value" id="kpi-threshold">0.610</div>
+                <div class="kpi-sub">Minimizes Portfolio Loan Loss</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Financial Cost Reduction</div>
+                <div class="kpi-value">9.9%</div>
+                <div class="kpi-sub">vs Default 0.50 Baseline</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Defaulter Base Rate</div>
+                <div class="kpi-value">7.7%</div>
+                <div class="kpi-sub">12:1 Extreme Class Imbalance</div>
+            </div>
+        </div>
+
+        <!-- Main Workspace -->
+        <div class="workspace">
+            <!-- Left Form Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span>Applicant Underwriting Simulator</span>
+                    <button type="button" onclick="loadSample()" style="background:none; border:none; color:var(--primary); font-size:0.8rem; font-weight:600; cursor:pointer;">Load Sample Profile</button>
+                </div>
+                <form id="scoreForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Annual Total Income ($)</label>
+                            <input type="number" id="income" value="180000" step="5000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Requested Credit Amount ($)</label>
+                            <input type="number" id="credit" value="450000" step="10000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Loan Annuity / Year ($)</label>
+                            <input type="number" id="annuity" value="23500" step="1000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Goods Price ($)</label>
+                            <input type="number" id="goods" value="400000" step="10000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Applicant Age (Years)</label>
+                            <input type="number" id="age" value="39" min="18" max="75" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Job Tenure (Years)</label>
+                            <input type="number" id="tenure" value="6.0" step="0.5" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Bureau Score 1 (0.0 - 1.0)</label>
+                            <input type="number" id="ext1" value="0.45" min="0" max="1" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Bureau Score 2 (0.0 - 1.0)</label>
+                            <input type="number" id="ext2" value="0.58" min="0" max="1" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Bureau Score 3 (0.0 - 1.0)</label>
+                            <input type="number" id="ext3" value="0.61" min="0" max="1" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Education Level</label>
+                            <select id="education">
+                                <option value="Higher education">Higher education</option>
+                                <option value="Secondary / secondary special">Secondary / secondary special</option>
+                                <option value="Incomplete higher">Incomplete higher</option>
+                                <option value="Lower secondary">Lower secondary</option>
+                            </select>
+                        </div>
+                        <div class="form-group full">
+                            <label>Underwriting Audit Note</label>
+                            <input type="text" id="notes" placeholder="e.g. Income confirmed via tax documents.">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary" id="btnSubmit">⚡ Evaluate Credit Risk & Underwriting Decision</button>
+                </form>
+            </div>
+
+            <!-- Right Results Card -->
+            <div class="card result-panel">
+                <div class="card-header">
+                    <span>Underwriting Risk Assessment</span>
+                    <span id="decisionTimestamp" style="font-size:0.75rem; color:var(--text-muted);">Ready</span>
+                </div>
+
+                <div class="decision-hero" id="heroBox">
+                    <div style="font-size:0.8rem; font-weight:600; text-transform:uppercase; color:var(--text-muted);">Predicted Default Risk</div>
+                    <div class="prob-number" id="probDisplay" style="color:var(--primary);">32.5%</div>
+                    <div class="decision-badge badge-approve" id="recBadge">APPROVE</div>
+                    <p id="rationaleText" style="font-size:0.85rem; color:var(--text-muted); margin-top:10px;">Applicant demonstrates solid debt service capacity and favorable credit bureau ratings.</p>
+                </div>
+
+                <div class="ratios-grid">
+                    <div class="ratio-item">
+                        <div class="ratio-title">Debt-to-Income</div>
+                        <div class="ratio-num" id="dtiDisplay">2.50x</div>
+                    </div>
+                    <div class="ratio-item">
+                        <div class="ratio-title">Annuity-to-Income</div>
+                        <div class="ratio-num" id="atiDisplay">13.1%</div>
+                    </div>
+                    <div class="ratio-item">
+                        <div class="ratio-title">Bureau Rating Avg</div>
+                        <div class="ratio-num" id="extAvgDisplay">0.547</div>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="font-size:0.85rem; font-weight:700; margin-bottom:8px;">Primary Decision Drivers (Explainability)</div>
+                    <div class="driver-list" id="driversList">
+                        <div class="driver-card low-risk"><strong>EMPLOYED_YEARS = 6.0</strong>: Stable multi-year employment tenure.</div>
+                        <div class="driver-card low-risk"><strong>DEBT_TO_INCOME = 2.5</strong>: Manageable debt burden within credit limits.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Audit Log Table -->
+        <div class="card" style="margin-bottom:24px;">
+            <div class="card-header">
+                <span>Recent Underwriting Decisions Log (MySQL / Database)</span>
+                <button onclick="loadDecisions()" style="background:none; border:none; color:var(--primary); font-size:0.8rem; font-weight:600; cursor:pointer;">↻ Refresh</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Timestamp</th>
+                        <th>Default Probability</th>
+                        <th>Risk Tier</th>
+                        <th>Recommendation</th>
+                        <th>Cutoff</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="decisionsTableBody">
+                    <tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Loading decision logs...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Analytical Figures Section -->
+        <div class="figures-section">
+            <h2 style="font-size:1.1rem; font-weight:700; margin-bottom:4px;">Machine Learning Model Performance & Analytics</h2>
+            <div class="figures-grid">
+                <div class="fig-card">
+                    <img src="/reports/figures/roc_curves.png" alt="ROC Curves">
+                    <div class="fig-title">ROC Curves Multi-Model Benchmark</div>
+                </div>
+                <div class="fig-card">
+                    <img src="/reports/figures/pr_curves.png" alt="PR Curves">
+                    <div class="fig-title">Precision-Recall Curves under Imbalance</div>
+                </div>
+                <div class="fig-card">
+                    <img src="/reports/figures/confusion_matrix.png" alt="Confusion Matrix">
+                    <div class="fig-title">Optimal Cutoff Confusion Matrix</div>
+                </div>
+                <div class="fig-card">
+                    <img src="/reports/figures/cost_curve.png" alt="Cost Curve">
+                    <div class="fig-title">Cost-Benefit Loss Minimization Curve</div>
+                </div>
+                <div class="fig-card">
+                    <img src="/reports/figures/feature_importance.png" alt="Feature Importance">
+                    <div class="fig-title">Top 20 Predictive Information Gain Drivers</div>
+                </div>
+                <div class="fig-card">
+                    <img src="/reports/figures/risk_score_distribution.png" alt="Risk Score Distribution">
+                    <div class="fig-title">Predicted Risk Probability Density</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadSample() {
+            document.getElementById('income').value = 180000;
+            document.getElementById('credit').value = 450000;
+            document.getElementById('annuity').value = 23500;
+            document.getElementById('goods').value = 400000;
+            document.getElementById('age').value = 39;
+            document.getElementById('tenure').value = 6.0;
+            document.getElementById('ext1').value = 0.45;
+            document.getElementById('ext2').value = 0.58;
+            document.getElementById('ext3').value = 0.61;
+            document.getElementById('education').value = "Higher education";
+            document.getElementById('notes').value = "Sample credit applicant check";
+        }
+
+        async function loadDecisions() {
+            try {
+                const res = await fetch('/api/decisions');
+                const data = await res.json();
+                const tbody = document.getElementById('decisionsTableBody');
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No decision records logged yet.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = data.map(d => `
+                    <tr>
+                        <td>#${d.decision_id || d.sk_id_curr}</td>
+                        <td>${d.decision_timestamp || 'Just now'}</td>
+                        <td><strong>${(d.default_probability * 100).toFixed(1)}%</strong></td>
+                        <td><span style="font-weight:600;">${d.risk_tier}</span></td>
+                        <td><span class="decision-badge ${d.recommendation === 'APPROVE' ? 'badge-approve' : d.recommendation === 'MANUAL REVIEW' ? 'badge-review' : 'badge-decline'}" style="font-size:0.75rem; padding:2px 8px;">${d.recommendation}</span></td>
+                        <td>${d.decision_threshold}</td>
+                        <td>${d.underwriter_notes || '-'}</td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        document.getElementById('scoreForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmit');
+            btn.disabled = true;
+            btn.innerText = "Evaluating...";
+
+            const payload = {
+                AMT_INCOME_TOTAL: parseFloat(document.getElementById('income').value),
+                AMT_CREDIT: parseFloat(document.getElementById('credit').value),
+                AMT_ANNUITY: parseFloat(document.getElementById('annuity').value),
+                AMT_GOODS_PRICE: parseFloat(document.getElementById('goods').value),
+                DAYS_BIRTH: -Math.round(parseFloat(document.getElementById('age').value) * 365.25),
+                DAYS_EMPLOYED: -Math.round(parseFloat(document.getElementById('tenure').value) * 365.25),
+                EXT_SOURCE_1: parseFloat(document.getElementById('ext1').value),
+                EXT_SOURCE_2: parseFloat(document.getElementById('ext2').value),
+                EXT_SOURCE_3: parseFloat(document.getElementById('ext3').value),
+                NAME_EDUCATION_TYPE: document.getElementById('education').value,
+                notes: document.getElementById('notes').value
+            };
+
+            try {
+                const res = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                
+                document.getElementById('probDisplay').innerText = data.default_risk_percentage;
+                const recBadge = document.getElementById('recBadge');
+                recBadge.innerText = data.recommendation;
+                recBadge.className = 'decision-badge ' + (data.recommendation === 'APPROVE' ? 'badge-approve' : data.recommendation === 'MANUAL REVIEW' ? 'badge-review' : 'badge-decline');
+                
+                document.getElementById('rationaleText').innerText = data.recommendation_rationale;
+
+                // Ratios
+                const dti = (payload.AMT_CREDIT / payload.AMT_INCOME_TOTAL).toFixed(2);
+                const ati = ((payload.AMT_ANNUITY / payload.AMT_INCOME_TOTAL) * 100).toFixed(1);
+                const extAvg = ((payload.EXT_SOURCE_1 + payload.EXT_SOURCE_2 + payload.EXT_SOURCE_3) / 3).toFixed(3);
+                document.getElementById('dtiDisplay').innerText = dti + 'x';
+                document.getElementById('atiDisplay').innerText = ati + '%';
+                document.getElementById('extAvgDisplay').innerText = extAvg;
+
+                // Drivers
+                const driversContainer = document.getElementById('driversList');
+                if (data.key_risk_factors && data.key_risk_factors.length > 0) {
+                    driversContainer.innerHTML = data.key_risk_factors.map(f => `
+                        <div class="driver-card ${f.impact.includes('HIGH') ? 'high-risk' : 'low-risk'}">
+                            <strong>${f.feature} = ${f.value}</strong> (${f.impact}): ${f.description}
+                        </div>
+                    `).join('');
+                } else {
+                    driversContainer.innerHTML = '<div class="driver-card low-risk">Balanced financial profile with standard credit risk parameters.</div>';
+                }
+
+                loadDecisions();
+            } catch (err) {
+                alert("Error scoring applicant: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "⚡ Evaluate Credit Risk & Underwriting Decision";
+            }
+        });
+
+        // Initialize on page load
+        loadDecisions();
+    </script>
+</body>
+</html>

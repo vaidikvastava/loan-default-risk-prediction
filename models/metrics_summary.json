@@ -1,0 +1,135 @@
+{
+  "best_model_name": "Random Forest",
+  "best_parameters": {
+    "n_estimators": 100,
+    "min_samples_split": 10,
+    "min_samples_leaf": 10,
+    "max_features": "log2",
+    "max_depth": 8
+  },
+  "benchmark_comparison": [
+    {
+      "model": "Logistic Regression",
+      "roc_auc": 0.7596,
+      "pr_auc": 0.2378,
+      "f1": 0.2455,
+      "recall": 0.6617,
+      "precision": 0.1507,
+      "brier_score": 0.2004
+    },
+    {
+      "model": "Random Forest",
+      "roc_auc": 0.7731,
+      "pr_auc": 0.2522,
+      "f1": 0.2826,
+      "recall": 0.594,
+      "precision": 0.1854,
+      "brier_score": 0.1715
+    },
+    {
+      "model": "Hist Gradient Boosting",
+      "roc_auc": 0.7407,
+      "pr_auc": 0.231,
+      "f1": 0.2966,
+      "recall": 0.4962,
+      "precision": 0.2115,
+      "brier_score": 0.1354
+    }
+  ],
+  "evaluation_default_threshold": {
+    "threshold": 0.5,
+    "roc_auc": 0.7659,
+    "pr_auc": 0.2443,
+    "brier_score": 0.1714,
+    "precision": 0.1979,
+    "recall": 0.5564,
+    "f1": 0.2919,
+    "true_negatives": 1296,
+    "false_positives": 300,
+    "false_negatives": 59,
+    "true_positives": 74,
+    "total_financial_loss": 595.0
+  },
+  "evaluation_optimal_threshold": {
+    "threshold": 0.61,
+    "roc_auc": 0.7659,
+    "pr_auc": 0.2443,
+    "brier_score": 0.1714,
+    "precision": 0.297,
+    "recall": 0.3684,
+    "f1": 0.3289,
+    "true_negatives": 1480,
+    "false_positives": 116,
+    "false_negatives": 84,
+    "true_positives": 49,
+    "total_financial_loss": 536.0
+  },
+  "cost_optimization": {
+    "optimal_cost_threshold": 0.61,
+    "min_financial_loss": 536.0,
+    "default_0_5_cost": 595.0,
+    "cost_reduction_pct": 9.92
+  },
+  "top_features": [
+    {
+      "Feature": "EXT_SOURCE_MEAN",
+      "Importance": 0.11759993682112939
+    },
+    {
+      "Feature": "EXT_SOURCE_MIN",
+      "Importance": 0.08557703317629312
+    },
+    {
+      "Feature": "EXT_SOURCE_3",
+      "Importance": 0.06780605460741461
+    },
+    {
+      "Feature": "EXT_SOURCE_MAX",
+      "Importance": 0.05943869237714477
+    },
+    {
+      "Feature": "EXT_SOURCE_2",
+      "Importance": 0.0422835352606789
+    },
+    {
+      "Feature": "EXT_SOURCE_STD",
+      "Importance": 0.03300085220965376
+    },
+    {
+      "Feature": "CREDIT_ANNUITY_RATIO",
+      "Importance": 0.02841869518872215
+    },
+    {
+      "Feature": "DAYS_EMPLOYED",
+      "Importance": 0.02453942259998688
+    },
+    {
+      "Feature": "ID_PUBLISH_YEARS",
+      "Importance": 0.024104027689146643
+    },
+    {
+      "Feature": "AGE_YEARS",
+      "Importance": 0.023886458413921313
+    },
+    {
+      "Feature": "EMPLOYED_YEARS",
+      "Importance": 0.02375973998133382
+    },
+    {
+      "Feature": "DAYS_LAST_PHONE_CHANGE",
+      "Importance": 0.023493029831569735
+    },
+    {
+      "Feature": "EXT_SOURCE_1",
+      "Importance": 0.022424775388381505
+    },
+    {
+      "Feature": "EMPLOYED_TO_AGE_RATIO",
+      "Importance": 0.02231368681595873
+    },
+    {
+      "Feature": "DAYS_ID_PUBLISH",
+      "Importance": 0.020965703488259817
+    }
+  ]
+}
